@@ -45,7 +45,7 @@ let ProductList = () => {
                                                                 Price : &#8377; {product.price.toFixed(2)}
                                                             </li>
                                                             <li className="list-group-item">
-                                                                Qty : {product.qty} Kgs
+                                                                Qty : {product.quantity} Kgs
                                                             </li>
                                                         </ul>
                                                     </div>
