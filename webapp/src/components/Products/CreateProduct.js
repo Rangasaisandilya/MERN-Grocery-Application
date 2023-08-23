@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 
 const CreateProduct = () => {
@@ -43,22 +43,22 @@ const CreateProduct = () => {
     const submitProduct = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        let dataurl = `http://localhost:5000/api/products`
+        let dataurl = `${process.env.REACT_APP_HOST_URL}`
         axios.post(dataurl, product).then((result) => {
             swal({
                 title: "Product Added!",
                 icon: "success",
                 button: "Ok",
             });
-                setProduct({
-                    name: '',
-                    price: '',
-                    quantity: '',
-                    image: '',
-                    info: ''
-                })
-                navigate('/admin')
-            }
+            setProduct({
+                name: '',
+                price: '',
+                quantity: '',
+                image: '',
+                info: ''
+            })
+            navigate('/admin')
+        }
         ).catch((error) => {
             swal({
                 title: "Something went wrong!",
@@ -130,16 +130,16 @@ const CreateProduct = () => {
                                     <div className="form-group mt-3">
                                         <div className="custom-file">
                                             <input required
-                                                   className="form-control"
-                                                   onChange={changeImage}
-                                                   type="file"
-                                                   id="customFile"/>
+                                                className="form-control"
+                                                onChange={changeImage}
+                                                type="file"
+                                                id="customFile" />
                                             <label className="custom-file-label" htmlFor="customFile">Product
                                                 Image</label>
                                             {
                                                 product.image &&
                                                 <img src={product.image} alt="" width="20"
-                                                     height="20"/>
+                                                    height="20" />
                                             }
                                         </div>
                                     </div>
@@ -151,7 +151,7 @@ const CreateProduct = () => {
                     </div>
                 </div>
             </div>
-            <div style={{marginBottom : '60px'}}/>
+            <div style={{ marginBottom: '60px' }} />
         </React.Fragment>
     )
 }

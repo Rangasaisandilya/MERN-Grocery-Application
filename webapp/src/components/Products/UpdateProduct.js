@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import swal from "sweetalert";
 
 const UpdateProduct = () => {
 
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
     const [product, setProduct] = useState({
         name: '',
         price: '',
@@ -44,22 +44,22 @@ const UpdateProduct = () => {
     const submitProduct = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        let dataurl = `http://localhost:5000/api/products/${id}`
+        let dataurl = `${process.env.REACT_APP_HOST_URL}/${id}`
         axios.put(dataurl, product).then((result) => {
             swal({
                 title: "Product Updated!",
                 icon: "success",
                 button: "Ok",
             });
-                setProduct({
-                    name: '',
-                    price: '',
-                    quantity: '',
-                    image: '',
-                    info: ''
-                })
-                navigate('/admin')
-            }
+            setProduct({
+                name: '',
+                price: '',
+                quantity: '',
+                image: '',
+                info: ''
+            })
+            navigate('/admin')
+        }
         ).catch((error) => {
             swal({
                 title: "Something went wrong!",
@@ -70,12 +70,12 @@ const UpdateProduct = () => {
 
     }
 
-    useEffect(()=>{
-        let dataurl = `http://localhost:5000/api/products/${id}`
-        axios.get(dataurl).then((response)=>{
+    useEffect(() => {
+        let dataurl = `${process.env.REACT_APP_HOST_URL}/${id}`
+        axios.get(dataurl).then((response) => {
             setProduct(response.data.product)
         })
-    },[])
+    }, [])
     return (
         <React.Fragment>
             <div className="container mt-3">
@@ -138,16 +138,16 @@ const UpdateProduct = () => {
                                     <div className="form-group mt-3">
                                         <div className="custom-file">
                                             <input
-                                                   className="form-control"
-                                                   onChange={changeImage}
-                                                   type="file"
-                                                   id="customFile"/>
+                                                className="form-control"
+                                                onChange={changeImage}
+                                                type="file"
+                                                id="customFile" />
                                             <label className="custom-file-label" htmlFor="customFile">Product
                                                 Image</label>
                                             {
                                                 product.image &&
                                                 <img src={product.image} alt="" width="20"
-                                                     height="20"/>
+                                                    height="20" />
                                             }
                                         </div>
                                     </div>
@@ -159,7 +159,7 @@ const UpdateProduct = () => {
                     </div>
                 </div>
             </div>
-            <div style={{marginBottom : '60px'}}/>
+            <div style={{ marginBottom: '60px' }} />
         </React.Fragment>
     )
 }

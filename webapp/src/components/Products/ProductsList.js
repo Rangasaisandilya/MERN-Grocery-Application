@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Axios from "axios";
 
 let ProductList = () => {
-    let [products , setProducts] = useState([]);
-    let [errorMessage , setErrorMessage] = useState('');
+    let [products, setProducts] = useState([]);
+    let [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        let dataURL = `http://127.0.0.1:5000/api/products`;
+        let dataURL = `${process.env.REACT_APP_HOST_URL}`;
+        console.log(process.env.REACT_APP_HOST_URL);
         Axios.get(dataURL).then((response) => {
             setProducts(response.data.products);
         }).catch((err) => {
@@ -14,7 +15,7 @@ let ProductList = () => {
         });
     }, []);
 
-    return(
+    return (
         <React.Fragment>
             <div className="container mt-3">
                 <div className="row animated slideInLeft">
@@ -33,7 +34,7 @@ let ProductList = () => {
                                             <div key={product._id} className="col-md-3">
                                                 <div className="card">
                                                     <div className="card-header text-center bg-white">
-                                                        <img src={product.image} alt="" width="150" height="150"/>
+                                                        <img src={product.image} alt="" width="150" height="150" />
                                                     </div>
                                                     <div className="card-body">
                                                         <ul className="list-group">

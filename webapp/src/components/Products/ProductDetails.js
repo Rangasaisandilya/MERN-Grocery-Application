@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 
 const ProductDetails = () => {
@@ -19,7 +19,7 @@ const ProductDetails = () => {
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    let dataurl = `http://localhost:5000/api/products/${data}`
+                    let dataurl = `${process.env.REACT_APP_HOST_URL}/${data}`
                     axios.delete(dataurl).then(() => {
                         swal({
                             title: "Product deleted!",
@@ -43,7 +43,7 @@ const ProductDetails = () => {
     }
 
     let getProducts = () => {
-        axios.get(`http://localhost:5000/api/products`).then((response) => {
+        axios.get(`${process.env.REACT_APP_HOST_URL}`).then((response) => {
             setProducts(response.data.products);
         }).catch((error) => {
             console.log(error.message);
@@ -70,45 +70,45 @@ const ProductDetails = () => {
                             products.length > 0 ?
                                 <table className="table table-hover text-center table-striped">
                                     <thead className="bg-dark text-white">
-                                    <tr>
-                                        <th>Product id</th>
-                                        <th>Product</th>
-                                        <th>Name</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Actions</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Product id</th>
+                                            <th>Product</th>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Actions</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    {products?.length > 0 ?
-                                        <React.Fragment>
-                                            {
-                                                products.map((product) => {
-                                                    return (
-                                                        <tr key={product._id}>
-                                                            <td>{product._id.substring(product._id.length - 4)}</td>
-                                                            <td>
-                                                                <img src={product.image} alt="product-image" width="70"
-                                                                     height="70"/>
-                                                            </td>
-                                                            <td>{product.name}</td>
-                                                            <td>&#8377;{product.price.toFixed(2)}</td>
-                                                            <td>{product.quantity} kgs</td>
-                                                            <td>
-                                                                <button className="btn btn-primary btn-sm me-2"
+                                        {products?.length > 0 ?
+                                            <React.Fragment>
+                                                {
+                                                    products.map((product) => {
+                                                        return (
+                                                            <tr key={product._id}>
+                                                                <td>{product._id.substring(product._id.length - 4)}</td>
+                                                                <td>
+                                                                    <img src={product.image} alt="product-image" width="70"
+                                                                        height="70" />
+                                                                </td>
+                                                                <td>{product.name}</td>
+                                                                <td>&#8377;{product.price.toFixed(2)}</td>
+                                                                <td>{product.quantity} kgs</td>
+                                                                <td>
+                                                                    <button className="btn btn-primary btn-sm me-2"
                                                                         onClick={() => handleUpdate(product._id)}>Update
-                                                                </button>
-                                                                <button className="btn btn-danger btn-sm "
+                                                                    </button>
+                                                                    <button className="btn btn-danger btn-sm "
                                                                         onClick={() => handledelete(product._id)}>Delete
-                                                                </button>
-                                                            </td>
-                                                        </tr>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
 
-                                                    )
-                                                })
-                                            }
-                                        </React.Fragment> : <></>
-                                    }
+                                                        )
+                                                    })
+                                                }
+                                            </React.Fragment> : <></>
+                                        }
                                     </tbody>
 
 
