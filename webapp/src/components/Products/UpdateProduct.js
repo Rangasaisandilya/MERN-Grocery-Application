@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import swal from "sweetalert";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProduct, updateProduct, updateProductForm } from "../../Store/actions";
 
 const UpdateProduct = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { selectedProduct } = useSelector((state) => state.ProductReducer);
     const { id } = useParams();
-    const [product, setProduct] = useState({
-        name: '',
-        price: '',
-        quantity: '',
-        image: '',
-        info: ''
-    })
-
-
-    const twoWaybind = (key, value) => {
-
-        setProduct({
-            ...product,
-            [key]: value
-        })
-
-    }
+    // changeInput
+    let changeInput = (event) => {
+        let key = event.target.name;
+        let value = event.target.value;
+        dispatch(updateProductForm(key, value));
+    };
 
     let changeImage = async (event) => {
         let imageFile = event.target.files[0];
@@ -31,10 +23,7 @@ const UpdateProduct = () => {
         reader.readAsDataURL(imageFile);
         reader.addEventListener('load', () => {
             if (reader.result) {
-                setProduct({
-                    ...product,
-                    image: reader.result
-                });
+                dispatch(updateProductForm("image", reader.result));
             } else {
                 alert('Error Occurred');
             }
@@ -44,38 +33,12 @@ const UpdateProduct = () => {
     const submitProduct = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        let dataurl = `${process.env.REACT_APP_HOST_URL}/${id}`
-        axios.put(dataurl, product).then((result) => {
-            swal({
-                title: "Product Updated!",
-                icon: "success",
-                button: "Ok",
-            });
-            setProduct({
-                name: '',
-                price: '',
-                quantity: '',
-                image: '',
-                info: ''
-            })
-            navigate('/admin')
-        }
-        ).catch((error) => {
-            swal({
-                title: "Something went wrong!",
-                icon: "error",
-                button: "Ok",
-            });
-        })
-
+        dispatch(updateProduct(id, selectedProduct, navigate, swal));
     }
 
     useEffect(() => {
-        let dataurl = `${process.env.REACT_APP_HOST_URL}/${id}`
-        axios.get(dataurl).then((response) => {
-            setProduct(response.data.product)
-        })
-    }, [])
+        dispatch(fetchProduct(id));
+    }, [id])
     return (
         <React.Fragment>
             <div className="container mt-3">
@@ -97,41 +60,45 @@ const UpdateProduct = () => {
                                         <input
                                             required
                                             type="text"
+                                            name="name"
                                             className="form-control"
-                                            value={product?.name}
+                                            value={selectedProduct?.name}
                                             placeholder="product name"
-                                            onChange={(event) => twoWaybind("name", event.target.value)}
+                                            onChange={changeInput}
                                         />
                                     </div>
                                     <div className="form-group mt-3">
                                         <input
+                                            name="price"
                                             type="text"
                                             required
                                             className="form-control"
-                                            value={product?.price}
+                                            value={selectedProduct?.price}
                                             placeholder="product price"
-                                            onChange={(event) => twoWaybind("price", event.target.value)}
+                                            onChange={changeInput}
                                         />
                                     </div>
 
                                     <div className="form-group mt-3">
                                         <input
+                                            name="quantity"
                                             type="text"
                                             required
                                             className="form-control"
-                                            value={product?.quantity}
+                                            value={selectedProduct?.quantity}
                                             placeholder="product quantity"
-                                            onChange={(event) => twoWaybind("quantity", event.target.value)}
+                                            onChange={changeInput}
                                         />
                                     </div>
                                     <div className="form-group mt-3">
                                         <textarea
+                                            name='info'
                                             className="form-control"
                                             required
-                                            value={product?.info}
+                                            value={selectedProduct?.info}
                                             placeholder="product info"
                                             rows="3"
-                                            onChange={(event) => twoWaybind("info", event.target.value)}
+                                            onChange={changeInput}
                                         />
                                     </div>
 
@@ -145,8 +112,8 @@ const UpdateProduct = () => {
                                             <label className="custom-file-label" htmlFor="customFile">Product
                                                 Image</label>
                                             {
-                                                product.image &&
-                                                <img src={product.image} alt="" width="20"
+                                                selectedProduct?.image &&
+                                                <img src={selectedProduct?.image} alt="" width="20"
                                                     height="20" />
                                             }
                                         </div>

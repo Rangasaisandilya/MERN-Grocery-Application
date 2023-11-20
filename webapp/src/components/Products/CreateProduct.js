@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
+import { useDispatch } from "react-redux";
+import { createProduct } from "../../Store/actions";
 
 const CreateProduct = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [product, setProduct] = useState({
         name: '',
         price: '',
@@ -43,30 +45,7 @@ const CreateProduct = () => {
     const submitProduct = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        let dataurl = `${process.env.REACT_APP_HOST_URL}`
-        axios.post(dataurl, product).then((result) => {
-            swal({
-                title: "Product Added!",
-                icon: "success",
-                button: "Ok",
-            });
-            setProduct({
-                name: '',
-                price: '',
-                quantity: '',
-                image: '',
-                info: ''
-            })
-            navigate('/admin')
-        }
-        ).catch((error) => {
-            swal({
-                title: "Something went wrong!",
-                icon: "error",
-                button: "Ok",
-            });
-        })
-
+        dispatch(createProduct(product, navigate, swal));
     }
     return (
         <React.Fragment>
